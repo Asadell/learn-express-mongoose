@@ -1,0 +1,6 @@
+0. pastikan sudah ada mongodb dan npm
+1. install semua package nya dengan 'npm i' di terminal project
+2. jalankan mongod --dbpath="C:\data\db"  (di cmd komputer)
+3. bisa menggunakan data yg ada dengan menjalankan di terminal project 'node seeds.js'
+4. trus langsung 'node index.js' di terminal project
+5. buka http://127.0.0.1:3000 di browser
