@@ -7,6 +7,7 @@ const ErrorHandler = require('./ErrorHandler');
 
 // Models
 const Product = require('./models/product');
+const Garment = require('./models/garment');
 
 // Connect to mongodb
 mongoose
@@ -34,6 +35,63 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+// Garments
+app.get(
+  '/garments',
+  wrapAsync(async (req, res) => {
+    const garments = await Garment.find({});
+    // res.send('bisa');
+    console.log(garments);
+    res.render('garments/index', { garments });
+  })
+);
+
+app.get('/garments/create', (req, res) => {
+  res.render('garments/create');
+});
+
+app.post(
+  '/garments',
+  wrapAsync(async (req, res) => {
+    const garment = new Garment(req.body);
+    // console.log(garment);
+    await garment.save();
+    res.redirect('/garments');
+  })
+);
+
+app.get(
+  '/garments/:id',
+  wrapAsync(async (req, res) => {
+    const garment = await Garment.findById(req.params.id);
+    res.render('garments/show', { garment });
+  })
+);
+
+app.get(
+  '/garments/:garment_id/products/create',
+  wrapAsync(async (req, res) => {
+    const { garment_id } = req.params;
+    res.render('products/create', { garment_id });
+  })
+);
+
+app.post(
+  '/garments/:garment_id/products',
+  wrapAsync(async (req, res) => {
+    const { garment_id } = req.params;
+    const garment = await Garment.findById(garment_id);
+    const product = new Product(req.body);
+    garment.products.push(product);
+    // garment.save();
+    // product.save();
+    console.log(garment);
+    console.log(product);
+    res.redirect(`/garments/${garment_id}`);
+  })
+);
+
+// Products
 app.get(
   '/products',
   wrapAsync(async (req, res) => {
